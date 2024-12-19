@@ -40,36 +40,40 @@
 리서치 결과를 바탕으로 프로젝트 요구 사항에 가장 부합하는 라이브러리를 선택합니다.
 
 ## 개발 단계
+단계 별로 scope을 정리하여 개발 계획을 수립합니다.
 
-### 1단계: 목업 데이터 기반 구현
-아래의 주요 컴포넌트를 목업 데이터(mock data)를 사용하여 초기 구현합니다.
+### 0단계: 배포 설계 및 binance api 호출 테스트
+- aws lambda, s3, cloudfront, github action 활용 예정
+- https://github.com/aws-samples/aws-lambda-nextjs
+- binance api 사용하려는 api 호출 테스트
+- https://github.com/binance/binance-connector-typescript?tab=readme-ov-file
+- 가능하면 websocket도 테스트 해두기
 
-- **Order Book**
-- **Chart**
-- **Order Panel**
-- **Sell Panel**
-- **Coin Search Panel**
+### 1단계: 최소 요구 사항을 충족하는 구현
+- binance api로 목업데이터 확보
+- 최소한의 데이터에서 임의로 랜덤하게 값이 변동되도록 nextjs 서버 세팅
+- polling으로 구현하되 시간간격을 다소 랜덤하게 세팅하여 기본 데이터 세팅 예정
+- 데이터 받으면 chart 및 orderbook등 에서 그대로 보여주도록 구현
+- 차트는 분봉으로 구현
 
-이 단계에서는 UI/UX에 집중하지 않고 기능의 기본 구조와 데이터 흐름을 확인합니다.
+### 2단계: 데이터 세팅 완료 후 차트 구현
+- polling 대신 SSE 사용하여 실시간 데이터 업데이트
+  - [lambda sse](https://docs.aws.amazon.com/lambda/latest/dg/configuration-response-streaming.html)
+- chart ux 보강 확대 축소 기능
 
-### 2단계: 바이낸스 API 연동하여 실시간 구현
-바이낸스 API를 사용하여 실제 데이터를 연동하고, 실시간으로 업데이트되는 기능을 구현합니다.
+### 3단계: 모킹 데이터가 아닌 실제 데이터로 구현
+- nextjs 서버에서 binance api로 polling 구현
+- s3 또는 dynamodb 사용하여 데이터 저장
+- 차트 월봉, 주봉, 일봉, 시봉, 분봉 구현
 
-- **실시간 데이터 페칭**
-- **웹소켓 연결 설정**
-- **에러 핸들링 및 데이터 정합성 유지**
-
-### 3단계: UI/UX 개선
-사용자 경험을 향상시키기 위해 UI/UX를 개선합니다.
-
-- **사용자 인터랙션 추가**
-- **디자인 요소 반영**
+### 4단계: 실시간 데이터로 구현
+- 웹소켓 연결 설정
+- 이동평균선 구현
 
 ## 테스트 및 품질 보증
 개발이 완료된 후 일부 테스트 코드를 추가하여 기능의 안정성을 확보합니다.
 
 - **단위 테스트**
 
-테스트 자동화를 통해 지속적인 품질 관리를 실시합니다.
 
 ---
